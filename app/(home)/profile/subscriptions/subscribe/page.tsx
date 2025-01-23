@@ -62,6 +62,7 @@ export default function Subscribe() {
         {
           onSuccess: (options: any) => {
             toast.success("Оплата прошла успешно")
+            window.location.href = '/profile/vpn'
           },
           onFail: (reason: any, options: any) => {
             toast.error(reason || "Ошибка оплаты")

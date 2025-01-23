@@ -234,17 +234,59 @@ export default function VPN() {
                                     <Download className="w-7 h-7 text-green-400" />
                                     Конфигурация
                                 </CardTitle>
-                                <CardDescription className="text-gray-400 flex" onClick={()=>{navigator.clipboard.writeText(config.URI); toast.success('Скопировано в буфер обмена')}}>
-                                    <Copy className="w-4 h-4 mr-2" />
-                                   Копировать ссылку
-                                </CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <pre className="bg-gray-900 p-4 rounded-lg overflow-x-auto">
-                                    <code className="text-green-400">
-                                        {JSON.stringify(config, null, 2)}
-                                    </code>
-                                </pre>
+                            <CardContent className="space-y-6">
+                                <div>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <p className="text-gray-400">URI конфигурации</p>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 text-gray-400 hover:text-white"
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(config.URI)
+                                                toast.success('URI скопирован в буфер обмена')
+                                            }}
+                                        >
+                                            <Copy className="w-4 h-4 mr-2" />
+                                            Копировать
+                                        </Button>
+                                    </div>
+                                    <div className="bg-gray-900 p-4 rounded-lg">
+                                        <div className="max-h-[100px] overflow-y-auto">
+                                            <code className="text-green-400 break-all">
+                                                {config.URI}
+                                            </code>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <p className="text-gray-400">JSON конфигурация</p>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 text-gray-400 hover:text-white"
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(JSON.stringify(config.JSON, null, 2))
+                                                toast.success('JSON конфигурация скопирована в буфер обмена')
+                                            }}
+                                        >
+                                            <Copy className="w-4 h-4 mr-2" />
+                                            Копировать
+                                        </Button>
+                                    </div>
+                                    <div className="bg-gray-900 p-4 rounded-lg">
+                                        <div className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+                                            <pre className="text-green-400">
+                                                <code>
+                                                    {JSON.stringify(config.JSON, null, 2)}
+                                                </code>
+                                            </pre>
+                                        </div>
+                                    </div>
+                                </div>
                             </CardContent>
                         </Card>
                     )}
