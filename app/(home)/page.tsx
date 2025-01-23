@@ -109,23 +109,33 @@ export default function Home() {
                 </div>
                 <div>
                 {groups==null ? <Loading/> : (
-                    <Card className="bg-black/50 backdrop-blur-sm border border-gray-800 hover:transform hover:scale-105 transition-all duration-300">
-                        <CardHeader className="space-y-4">
-                            <CardTitle className="text-2xl text-white font-bold">{groups.items[0].name}</CardTitle>
-                            <CardDescription className="text-gray-300">{groups.items[0].description}</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <ul className="space-y-4">
-                                {groups.items[0].products.map((product) => (
-                                    <li key={product.id} className="flex items-center justify-between text-white">
-                                        <span className="text-lg">{product.name}</span>
-                                        <span className="text-[#bfff01] font-semibold">{product.price} руб.</span>
-                                    </li>
-                                ))}
-                            </ul>
-                            <FastRegister/>
-                        </CardContent>
-                    </Card>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {groups.items.slice(0, 4).map((group) => (
+                            <Card key={group.id} className="bg-black/50 backdrop-blur-sm border border-gray-800 hover:transform hover:scale-105 transition-all duration-300">
+                                <CardHeader className="space-y-4">
+                                    <CardTitle className="text-2xl text-white font-bold">{group.name}</CardTitle>
+                                    <CardDescription className="text-gray-300">{group.description}</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <ul className="space-y-4">
+                                        {group.products.map((product) => (
+                                            <li key={product.id} className="flex items-center justify-between text-white">
+                                                <span className="text-lg">{product.name}</span>
+                                                <span className="text-[#bfff01] font-semibold">{product.price} руб.</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    {auth === 'true' ? (
+                                        <Button onClick={()=>{window.location.href = '/profile/subscriptions/subscribe'}} className="w-full mt-6 bg-[#bfff01] text-black hover:bg-[#9fdf00] transition-all duration-300 font-semibold">
+                                            Выбрать тариф
+                                        </Button>
+                                    ) : (
+                                        <FastRegister />
+                                    )}
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
                 )}
                 </div>
                 <CarouselSize/>

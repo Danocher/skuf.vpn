@@ -3,7 +3,7 @@ import {axiosClassic} from "../api/interceprots";
 
 export const GroupService = {
     async getGroups() {
-        const response = await axiosClassic.get<IGroup>('groups?count=5&offset=0')
+        const response = await axiosClassic.get<IGroup>('groups?count=4&offset=0')
         return response.data
     }
 }

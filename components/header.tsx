@@ -16,6 +16,7 @@ export default function Header() {
         { title: "Отзывы", href: "/#reviews" },
        
     ];
+
     const [auth, setAuth] = useState(false);
     useEffect(() => {
         setAuth(Cookies.get('isAuth') === 'true')
@@ -25,7 +26,6 @@ export default function Header() {
     
     const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         e.preventDefault();
-        // Если это не якорная ссылка, просто переходим по ней
         if (!href.startsWith('#')) return;
 
         const element = document.querySelector(href);

@@ -20,106 +20,128 @@ declare global {
 
 export default function Subscribe() {
     const [groups, setGroups] = useState<IGroup | null>(null);
-  useEffect(() => {
-    GroupService.getGroups()
-    .then((res) => {
-      setGroups(res)
-    })
-    .catch((error) => {
-      toast.error(error.response?.data?.message || "Ошибка получения групп")
-    })
-  }, [])
-  const [selectedValue, setSelectedValue] = useState<string | undefined>('')
-  const [order, setOrder] = useState(false)
-//   const [orderAll, setOrderAll] = useState<IOrder | null>()
-  function handlePay() {
-    const product_id = groups?.items[0]?.products.find((product) => product.price.toString() === selectedValue)?.id
-    if(!product_id) return toast.error("Ошибка выбора тарифа")
-    OrdersService.CreateOrders(product_id, 1, 'RUB')
-    .then((res) => {
-      console.log(res)
-      
-      setOrder(true)
-      if (!window.cp) {
-        toast.error("Ошибка инициализации платежной системы")
-        return
-      }
+    const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+    const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [order, setOrder] = useState(false)
 
-      const widget = new window.cp.CloudPayments();
-      
-      widget.pay('charge', 
-        {
-          publicId: res.api_key,
-          description: res.product.description,
-          amount: res.amount,
-          currency: res.currency,
-          accountId: res.user.id,
-          invoiceId: res.id,
-          skin: "modern", // пусть остается так
-          email: res.user.email, // email юзера (user.email)
-          autoClose: 3 // время, через которое закрывается виджет после оплаты (можно как-то настроить, чтобы было недолго)
-        },
-        {
-          onSuccess: (options: any) => {
-            toast.success("Оплата прошла успешно")
-            window.location.href = '/profile/vpn'
-          },
-          onFail: (reason: any, options: any) => {
-            toast.error(reason || "Ошибка оплаты")
-          },
-        }
-      )
-    })
-    .catch((error) => {
-      toast.error(error.response?.data?.message || "Ошибка создания заказа")
-    })
-  }
-  return (
-    <div className="container mx-auto p-8">
-      <Card className="max-w-md mx-auto bg-gray-800/50 border-gray-700">
-        <CardContent className="p-6">
-          <h2 className="text-2xl font-bold mb-4 text-gray-100">Оформление подписки</h2>
-          <p className="text-gray-300 mb-6">
-            Выберите тариф подходящий вам
-          </p>
-          {groups==null  ? <Loading/> : (
-                    <Card className="bg-black/50 backdrop-blur-sm border border-gray-800 hover:transform hover:scale-105 transition-all duration-300">
-                        <CardHeader className="space-y-4">
-                            <CardTitle className="text-2xl text-white font-bold">{groups.items[0].name}</CardTitle>
-                            <CardDescription className="text-gray-300">{groups.items[0].description}</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                        <RadioGroup defaultValue="comfortable" onValueChange={(value) => setSelectedValue(groups.items[0].products.find((product) => product.name === value)?.price.toString())}>
-                        <ul className="space-y-4">
-                            {groups.items[0].products.map((product) => (
-                                <li key={product.id} className="flex items-center justify-between text-white">
-                                    <RadioGroupItem value={product.name} id="r1" className='text-[#bfff01] bg-white'/>
-                                    <span className="text-lg">{product.name}</span>
-                                    <span className="text-[#bfff01] font-semibold">{product.price} руб.</span>
-                                </li>
+    useEffect(() => {
+        GroupService.getGroups()
+        .then((res) => {
+            setGroups(res)
+        })
+        .catch((error) => {
+            toast.error(error.response?.data?.message || "Ошибка получения групп")
+        })
+    }, [])
+
+    function handleProductChange(value: string, groupId: number) {
+        setSelectedProduct(value);
+        setSelectedGroupId(groupId);
+    }
+
+    function handleSubmit() {
+        if (!selectedGroupId) return toast.error("Выберите тариф");
+        
+        const group = groups?.items.find((group) => group.id === selectedGroupId);
+        if (!group) return toast.error("Ошибка выбора тарифа");
+        
+        const product = group.products.find((product) => product.name === selectedProduct);
+        if (!product) return toast.error("Ошибка выбора тарифа");
+
+        setLoading(true);
+        OrdersService.CreateOrders(product.id, 1, 'RUB')
+        .then((res) => {
+            setLoading(false);
+            setOrder(true);
+            if (!window.cp) {
+                toast.error("Ошибка инициализации платежной системы");
+                return;
+            }
+
+            const widget = new window.cp.CloudPayments();
+            
+            widget.pay('charge', 
+                {
+                    publicId: res.api_key,
+                    description: res.product.description,
+                    amount: res.amount,
+                    currency: res.currency,
+                    accountId: res.user.id,
+                    invoiceId: res.id,
+                    skin: "modern",
+                    email: res.user.email,
+                    autoClose: 3
+                },
+                {
+                    onSuccess: (options: any) => {
+                        toast.success("Оплата прошла успешно");
+                        window.location.href = '/profile/vpn';
+                    },
+                    onFail: (reason: any, options: any) => {
+                        toast.error(reason || "Ошибка оплаты");
+                    },
+                }
+            );
+        })
+        .catch((error) => {
+            setLoading(false);
+            toast.error(error.response?.data?.message || "Ошибка создания заказа");
+        });
+    }
+
+    return (
+        <div className="container mx-auto p-8">
+            <div className="max-w-6xl mx-auto">
+                <h2 className="text-2xl font-bold mb-4 text-gray-100">Оформление подписки</h2>
+                <p className="text-gray-300 mb-6">
+                    Выберите тариф подходящий вам
+                </p>
+                {groups == null ? <Loading/> : (
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            {groups.items.slice(0, 4).map((group) => (
+                                <div key={group.id} 
+                                    className={`bg-gray-800/50 border ${selectedGroupId === group.id ? 'border-[#bfff01]' : 'border-gray-700'} rounded-lg p-6 backdrop-blur-sm hover:bg-gray-800/70 transition-all duration-300`}
+                                >
+                                    <div className="mb-4">
+                                        <h3 className="text-2xl font-bold text-white mb-2">{group.name}</h3>
+                                        <p className="text-gray-400">{group.description}</p>
+                                    </div>
+                                    <RadioGroup 
+                                        value={selectedGroupId === group.id ? selectedProduct || '' : ''}
+                                        onValueChange={(value) => handleProductChange(value, group.id)} 
+                                        className="space-y-4"
+                                    >
+                                        {group.products.map((product) => (
+                                            <div key={product.id} 
+                                                className={`flex items-center space-x-4 rounded-lg border ${selectedGroupId === group.id && selectedProduct === product.name ? 'border-[#bfff01]' : 'border-gray-700'} p-4 hover:bg-gray-700/50 transition-all`}
+                                            >
+                                                <RadioGroupItem 
+                                                    value={product.name} 
+                                                    id={product.id.toString()} 
+                                                    className="text-[#bfff01] bg-white"
+                                                />
+                                                <div className="flex-1 flex justify-between items-center">
+                                                    <span className="text-lg text-white">{product.name}</span>
+                                                    <span className="text-[#bfff01] font-semibold">{product.price} руб.</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </RadioGroup>
+                                </div>
                             ))}
-                        </ul>
-                            </RadioGroup>
-                            
-                           
-                        </CardContent>
-                    </Card>
+                        </div>
+                        <Button 
+                            onClick={handleSubmit}
+                            disabled={loading || !selectedProduct} 
+                            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-6 text-lg"
+                        >
+                            {loading ? "Загрузка..." : "Оплатить"}
+                        </Button>
+                    </>
                 )}
-                {order ? (<Button
-            id="payButton"
-            className="w-full bg-gradient-to-r from-blue-400 to-purple-500 hover:opacity-90 mt-4"
-          >
-            Оплатить {selectedValue} ₽
-          </Button>) : (
-            <Button
-            onClick={handlePay}
-            className="w-full bg-gradient-to-r from-blue-400 to-purple-500 hover:opacity-90 mt-4"
-          >
-            Оформить заказ
-          </Button>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  )
+            </div>
+        </div>
+    )
 }
