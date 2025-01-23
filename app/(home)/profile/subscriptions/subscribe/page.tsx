@@ -92,7 +92,7 @@ export default function Subscribe() {
                         <ul className="space-y-4">
                             {groups.items[0].products.map((product) => (
                                 <li key={product.id} className="flex items-center justify-between text-white">
-                                    <RadioGroupItem value={product.name} id="r1" className='text-[#bfff01] '/>
+                                    <RadioGroupItem value={product.name} id="r1" className='text-[#bfff01] bg-white'/>
                                     <span className="text-lg">{product.name}</span>
                                     <span className="text-[#bfff01] font-semibold">{product.price} руб.</span>
                                 </li>
