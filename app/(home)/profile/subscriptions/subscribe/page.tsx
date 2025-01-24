@@ -64,7 +64,7 @@ export default function Subscribe() {
             widget.pay('charge', 
                 {
                     publicId: res.api_key,
-                    description: res.product.description,
+                    description: res.title,
                     amount: res.amount,
                     currency: res.currency,
                     accountId: res.user.id,

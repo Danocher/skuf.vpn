@@ -12,6 +12,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { StarIcon } from "lucide-react"
 import { useInterval } from "@/hooks/use-interval"
+import { Reviews, ReviewsService } from "@/services/reviews.service"
+import { toast } from "sonner"
 
 const reviews = [
   {
@@ -45,8 +47,16 @@ const reviews = [
 ]
 
 export default function CarouselReviews() {
-  const [api, setApi] = useState<any>()
-
+  const [reviews, setReviews] = useState<Reviews>()
+  useEffect(() => {
+    ReviewsService.getReviews()
+    .then((res) => {
+      setReviews(res)
+    })
+    .catch((error) => {
+      toast.error(error.response?.data?.message || "Ошибка получения отзывов")
+    })
+  }, [])
   return (
     <div className="relative w-full max-w-6xl mx-auto ">
       <Carousel
@@ -57,27 +67,27 @@ export default function CarouselReviews() {
         className="w-full"
       >
         <CarouselContent className="-ml-2 md:-ml-4">
-          {reviews.map((review, index) => (
+          {reviews && reviews.items.map((review, index) => (
             <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
               <div className="h-[280px]">
                 <Card className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-gray-700 hover:border-gray-600 transition-all duration-300 h-full">
                   <CardContent className="p-6 flex flex-col h-full">
                     <div className="flex items-center gap-4 mb-4">
                       <Avatar className="h-12 w-12 ring-2 ring-purple-500/20">
-                        <AvatarImage src={review.avatar} />
-                        <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-600">{review.name[0]}</AvatarFallback>
+                        
+                        <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-600">{review.reviewer_name[0]}</AvatarFallback>
                       </Avatar>
                       <div>
-                        <h3 className="text-lg font-semibold text-white">{review.name}</h3>
+                        <h3 className="text-lg font-semibold text-white">{review.reviewer_name}</h3>
                         <div className="flex items-center gap-0.5">
-                          {Array.from({ length: review.rating }).map((_, i) => (
+                          {Array.from({ length: review.count_stars }).map((_, i) => (
                             <StarIcon key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                           ))}
                         </div>
                       </div>
                       <span className="ml-auto text-sm text-gray-400">{review.date}</span>
                     </div>
-                    <p className="text-gray-300 leading-relaxed line-clamp-4">{review.text}</p>
+                    <p className="text-gray-300 leading-relaxed line-clamp-4">{review.title}</p>
                   </CardContent>
                 </Card>
               </div>

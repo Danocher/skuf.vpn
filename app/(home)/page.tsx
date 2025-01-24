@@ -145,7 +145,6 @@ export default function Home() {
                 </div>
                 <CarouselReviews/>
             </div>
-            <Footer/>
         </div>
     );
 }
