@@ -67,15 +67,15 @@ export default function VPN() {
     }, [])
 
     const handleCountryChange = (value: string) => {
+        setConfig(undefined)
+        setSelectedZone(undefined)
         setLoading(true)
         toast.success("Выбрана страна " + value)
-        console.log(value)
         ZonesService.searchZones(value)
             .then((response) => {
                 setZones(response)
                 if (response.items.length > 0) {
                     setSelectedZone(response.items[0])
-                    console.log(selectedZone)
                 }
             })
             .catch((error) => {

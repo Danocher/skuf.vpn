@@ -6,6 +6,10 @@ import { AuthModal } from "./auth.modal";
 import { toast } from 'sonner';
 import CabinetButton from '../app/(home)/profile/_components/cabinet-button';
 import { useRouter } from 'next/navigation';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
+import { Button } from './ui/button';
+
+import { Menu } from 'lucide-react';
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,7 +41,7 @@ export default function Header() {
             setIsMenuOpen(false); // Закрываем мобильное меню после клика
         }
     };
-
+    const side = 'top'
     return (
         <header className=" top-0 left-0 right-0 bg-black/80 backdrop-blur-sm z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -64,30 +68,41 @@ export default function Header() {
                     </nav>
 
                     {/* Mobile menu button */}
-                    <button
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="md:hidden rounded-lg p-2 inline-flex items-center justify-center text-white hover:bg-white/10 transition-colors"
-                    >
-                        <span className="sr-only">Открыть меню</span>
-                        <svg
-                            className={`h-6 w-6 ${isMenuOpen ? "hidden" : "block"}`}
-                            stroke="currentColor"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                        <svg
-                            className={`h-6 w-6 ${isMenuOpen ? "block" : "hidden"}`}
-                            stroke="currentColor"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
+                    <Sheet >
+                        <SheetTrigger asChild>
+                            <Button variant="outline">
+                                <Menu/>
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side={side} className='bg-black/80 backdrop-blur-sm [&>button]:text-white'>
+                            <SheetHeader>
+                            <SheetTitle className='text-white'>Меню</SheetTitle>
+                           
+                            </SheetHeader>
+                            <div className="flex flex-col space-y-4 mt-2">
+                                {navItems.map((item) => (
+                                    <SheetClose asChild key={item.title}>
+                                        <Button
+                                            type='submit'
+                                            onClick={(e) => {router.push(item.href); handleScroll(e, item.href)}}
+                                            className="text-white px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all duration-300 text-sm lg:text-base"
+                                        >
+                                           
+                                            <SheetClose asChild>
+                                            {item.title}
+                                            </SheetClose>
+                                        </Button>
+                                    </SheetClose>
+                                ))}
+                                <SheetClose asChild>
+                                    <div>
+                                        {auth ? <CabinetButton/> : <AuthModal/>}
+                                    </div>
+                                </SheetClose>
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+                        </div>
                 {/* Mobile Navigation */}
                 <div className={`md:hidden ${isMenuOpen ? "block" : "hidden"}`}>
                     <div className="px-2 pt-2 pb-3 space-y-1">

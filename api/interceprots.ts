@@ -42,7 +42,7 @@ axiosWithAuth.interceptors.response.use(
                 try {
                     await AuthService.getNewTokens()
                 } catch (error) {
-                    window.location.href = '/auth';
+                    window.location.href = '/';
                     return;
                 }
                 return axiosWithAuth.request(originalRequest)
@@ -52,7 +52,7 @@ axiosWithAuth.interceptors.response.use(
                     Cookies.remove('refreshToken')
                     Cookies.remove('userId')
                     Cookies.remove('isAuth')
-                    window.location.href = '/auth';
+                    window.location.href = '/';
                     return;
                 }
             }
