@@ -6,7 +6,14 @@ import { AuthModal } from "./auth.modal";
 import { toast } from 'sonner';
 import CabinetButton from '../app/(home)/profile/_components/cabinet-button';
 import { useRouter } from 'next/navigation';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+  } from "@/components/ui/dropdown-menu"
 import { Button } from './ui/button';
 
 import { Menu } from 'lucide-react';
@@ -30,13 +37,21 @@ export default function Header() {
     
     const router = useRouter()
     
-    
-    const handleScrollToSection = (id: string) => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const handleNavigation = (e: React.MouseEvent, href: string) => {
+        e.preventDefault();
+        if (href.startsWith('#')) {
+            const element = document.querySelector(href);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                });
+            }
+        } else {
+            router.push(href);
         }
     };
+
     const side = 'top'
     return (
         <header className=" top-0 left-0 right-0 bg-black/80 backdrop-blur-sm z-50">
@@ -53,7 +68,7 @@ export default function Header() {
                             <a
                                 key={item.title}
                                 href={item.href}
-                                onClick={(e) => router.push(item.href)}
+                                onClick={(e) => handleNavigation(e, item.href)}
                                 className="text-white px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all duration-300 text-sm lg:text-base"
                             >
                                 {item.title}
@@ -62,32 +77,27 @@ export default function Header() {
                         {auth ? <CabinetButton/> : <AuthModal/>}
                        
                     </nav>
-                    <Sheet >
-                    <SheetTrigger asChild className='md:hidden'>
-                        <Button variant="outline" ><Menu/></Button>
-                    </SheetTrigger>
-                    <SheetContent side={side}>
-                        <SheetHeader>
-                            <SheetTitle>Меню</SheetTitle>
-                        </SheetHeader>
-                        
-                        <div className="text-black">
-                            {navItems.map((item) => (
-                                 <div key={item.title} className="py-2" >
-                                    <SheetClose asChild key={item.title}>
-                                       <div onClick={() =>handleScrollToSection(item.href)}                               >
-                                            {item.title}
-                                        </div>
-                                    </SheetClose>
-                             </div>
-                            ))}
-                        </div>
-                        
-                        <SheetFooter>
-                           
-                        </SheetFooter>
-                    </SheetContent>
-                    </Sheet>
+                    <DropdownMenu>
+                    <DropdownMenuTrigger className='text-white px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all duration-300 text-sm lg:text-base'><Menu/></DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuLabel>Меню</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {navItems.map((item) => (
+                            <DropdownMenuItem 
+                                key={item.title} 
+                                asChild
+                            >
+                                <a
+                                    href={item.href}
+                                    onClick={(e) => handleNavigation(e, item.href)}
+                                    className="w-full cursor-pointer"
+                                >
+                                    {item.title}
+                                </a>
+                            </DropdownMenuItem>
+                        ))}
+                    </DropdownMenuContent>
+                    </DropdownMenu>
                     {/* Mobile menu button */}
                     
                 </div>
