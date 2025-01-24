@@ -56,7 +56,7 @@ export default function Header() {
     return (
         <header className=" top-0 left-0 right-0 bg-black/80 backdrop-blur-sm z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-20">
+                <div className="flex flex-col md:flex-row items-center justify-between min-h-[5rem] py-4 md:py-0">
                     {/* Logo */}
                     <div className="flex-shrink-0">
                         <Image src="/logo.svg" alt="logo" width={80} height={80} className="w-auto h-12" />
@@ -75,33 +75,28 @@ export default function Header() {
                             </a>
                         ))}
                         {auth ? <CabinetButton/> : <AuthModal/>}
-                       
                     </nav>
-                    <DropdownMenu>
-                    <DropdownMenuTrigger className='text-white px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all duration-300 text-sm lg:text-base'><Menu/></DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>Меню</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {navItems.map((item) => (
-                            <DropdownMenuItem 
-                                key={item.title} 
-                                asChild
-                            >
-                                <a
-                                    href={item.href}
-                                    onClick={(e) => handleNavigation(e, item.href)}
-                                    className="w-full cursor-pointer"
-                                >
-                                    {item.title}
-                                </a>
-                            </DropdownMenuItem>
+
+                    {/* Mobile Navigation */}
+                    <div className='w-full grid grid-cols-2 gap-3 mt-4 md:hidden px-2'>
+                        {[...navItems, { title: auth ? "Личный кабинет" : "Войти", href: auth ? "/profile" : "#" }].map((item) => (
+                            <div key={item.title} className="flex justify-center">
+                                {item.title === "Личный кабинет" || item.title === "Войти" ? (
+                                    auth ? <CabinetButton /> : <AuthModal />
+                                ) : (
+                                    <a
+                                        href={item.href}
+                                        onClick={(e) => handleNavigation(e, item.href)}
+                                        className="text-white text-center px-3 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all duration-300 text-sm w-full"
+                                    >
+                                        {item.title}
+                                    </a>
+                                )}
+                            </div>
                         ))}
-                    </DropdownMenuContent>
-                    </DropdownMenu>
-                    {/* Mobile menu button */}
-                    
+                    </div>
                 </div>
-                {/* Mobile Navigation */}
+                {/* Mobile menu button */}
                 
             </div>
         </header>

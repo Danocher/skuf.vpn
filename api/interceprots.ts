@@ -52,7 +52,7 @@ axiosWithAuth.interceptors.response.use(
                     Cookies.remove('refreshToken')
                     Cookies.remove('userId')
                     Cookies.remove('isAuth')
-                    window.location.href = '/';
+                    // window.location.href = '/';
                     return;
                 }
             }
