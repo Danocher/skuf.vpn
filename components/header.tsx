@@ -84,7 +84,7 @@ export default function Header() {
                                     <SheetClose asChild key={item.title}>
                                         <Button
                                             type='submit'
-                                            onClick={(e) => {router.push(item.href); handleScroll(e, item.href)}}
+                                            onClick={(e) => {router.push(item.href); }}
                                             className="text-white px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all duration-300 text-sm lg:text-base"
                                         >
                                            
