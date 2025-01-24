@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
 import Footer from "@/components/footer";
+import YandexMetrika from "@/components/metrica";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,7 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head><script src="https://widget.cloudpayments.ru/bundles/cloudpayments.js"></script></head>
+      <head>
+        <script src="https://widget.cloudpayments.ru/bundles/cloudpayments.js"></script>
+        <YandexMetrika />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#191919]`}
       >

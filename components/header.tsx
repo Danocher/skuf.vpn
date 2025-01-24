@@ -10,9 +10,11 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 import { Button } from './ui/button';
 
 import { Menu } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [sheetOpen, setSheetOpen] = useState(false);
 
     const navItems = [
         { title: "Преимущества", href: "/#features" },
@@ -28,17 +30,11 @@ export default function Header() {
     
     const router = useRouter()
     
-    const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-        e.preventDefault();
-        if (!href.startsWith('#')) return;
-
-        const element = document.querySelector(href);
+    
+    const handleScrollToSection = (id: string) => {
+        const element = document.getElementById(id);
         if (element) {
-            element.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            });
-            setIsMenuOpen(false); // Закрываем мобильное меню после клика
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     };
     const side = 'top'
@@ -57,7 +53,7 @@ export default function Header() {
                             <a
                                 key={item.title}
                                 href={item.href}
-                                onClick={(e) => {router.push(item.href); handleScroll(e, item.href)}}
+                                onClick={(e) => router.push(item.href)}
                                 className="text-white px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all duration-300 text-sm lg:text-base"
                             >
                                 {item.title}
@@ -66,61 +62,37 @@ export default function Header() {
                         {auth ? <CabinetButton/> : <AuthModal/>}
                        
                     </nav>
-
-                    {/* Mobile menu button */}
                     <Sheet >
-                        <SheetTrigger asChild>
-                            <Button variant="outline">
-                                <Menu/>
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side={side} className='bg-black/80 backdrop-blur-sm [&>button]:text-white'>
-                            <SheetHeader>
-                            <SheetTitle className='text-white'>Меню</SheetTitle>
-                           
-                            </SheetHeader>
-                            <div className="flex flex-col space-y-4 mt-2">
-                                {navItems.map((item) => (
+                    <SheetTrigger asChild className='md:hidden'>
+                        <Button variant="outline" ><Menu/></Button>
+                    </SheetTrigger>
+                    <SheetContent side={side}>
+                        <SheetHeader>
+                            <SheetTitle>Меню</SheetTitle>
+                        </SheetHeader>
+                        
+                        <div className="text-black">
+                            {navItems.map((item) => (
+                                 <div key={item.title} className="py-2" >
                                     <SheetClose asChild key={item.title}>
-                                        <Button
-                                            type='submit'
-                                            onClick={(e) => {router.push(item.href); }}
-                                            className="text-white px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all duration-300 text-sm lg:text-base"
-                                        >
-                                           
-                                            <SheetClose asChild>
+                                       <div onClick={() =>handleScrollToSection(item.href)}                               >
                                             {item.title}
-                                            </SheetClose>
-                                        </Button>
+                                        </div>
                                     </SheetClose>
-                                ))}
-                                <SheetClose asChild>
-                                    <div>
-                                        {auth ? <CabinetButton/> : <AuthModal/>}
-                                    </div>
-                                </SheetClose>
-                            </div>
-                        </SheetContent>
-                    </Sheet>
+                             </div>
+                            ))}
                         </div>
-                {/* Mobile Navigation */}
-                <div className={`md:hidden ${isMenuOpen ? "block" : "hidden"}`}>
-                    <div className="px-2 pt-2 pb-3 space-y-1">
-                        {navItems.map((item) => (
-                            <a
-                                key={item.title}
-                                href={item.href}
-                                onClick={(e) => handleScroll(e, item.href)}
-                                className="block text-white px-3 py-2 rounded-md text-base hover:bg-white/10 transition-colors"
-                            >
-                                {item.title}
-                            </a>
-                        ))}
-                        <button className="w-full mt-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity duration-300">
-                            Начать бесплатно
-                        </button>
-                    </div>
+                        
+                        <SheetFooter>
+                           
+                        </SheetFooter>
+                    </SheetContent>
+                    </Sheet>
+                    {/* Mobile menu button */}
+                    
                 </div>
+                {/* Mobile Navigation */}
+                
             </div>
         </header>
     );

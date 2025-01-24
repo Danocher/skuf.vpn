@@ -91,40 +91,41 @@ export default function Subscribe() {
     }
 
     return (
-        <div className="container mx-auto p-8">
+        <div className="container mx-auto px-3 sm:px-4 sm:p-8">
             <div className="max-w-6xl mx-auto">
-                <h2 className="text-2xl font-bold mb-4 text-gray-100">Оформление подписки</h2>
-                <p className="text-gray-300 mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-gray-100">Оформление подписки</h2>
+                <p className="text-sm sm:text-base text-gray-300 mb-3 sm:mb-6">
                     Выберите тариф подходящий вам
                 </p>
                 {groups == null ? <Loading/> : (
                     <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6 mb-3 sm:mb-6">
                             {groups.items.slice(0, 4).map((group) => (
                                 <div key={group.id} 
-                                    className={`bg-gray-800/50 border ${selectedGroupId === group.id ? 'border-[#bfff01]' : 'border-gray-700'} rounded-lg p-6 backdrop-blur-sm hover:bg-gray-800/70 transition-all duration-300`}
+                                    className={`bg-gray-800/50 border ${selectedGroupId === group.id ? 'border-[#bfff01]' : 'border-gray-700'} rounded-lg p-3 sm:p-6 backdrop-blur-sm hover:bg-gray-800/70 transition-all duration-300`}
                                 >
-                                    <div className="mb-4">
-                                        <h3 className="text-2xl font-bold text-white mb-2">{group.name}</h3>
-                                        <p className="text-gray-400">{group.description}</p>
+                                    <div className="mb-2 sm:mb-4">
+                                        <h3 className="text-lg sm:text-2xl font-bold text-white mb-1 sm:mb-2">{group.name}</h3>
+                                        <p className="text-sm sm:text-base text-gray-400">{group.description}</p>
                                     </div>
                                     <RadioGroup 
                                         value={selectedGroupId === group.id ? selectedProduct || '' : ''}
                                         onValueChange={(value) => handleProductChange(value, group.id)} 
-                                        className="space-y-4"
+                                        className="space-y-2 sm:space-y-4"
                                     >
                                         {group.products.map((product) => (
                                             <div key={product.id} 
-                                                className={`flex items-center space-x-4 rounded-lg border ${selectedGroupId === group.id && selectedProduct === product.name ? 'border-[#bfff01]' : 'border-gray-700'} p-4 hover:bg-gray-700/50 transition-all`}
+                                                className={`flex items-center space-x-2 sm:space-x-4 rounded-lg border ${selectedGroupId === group.id && selectedProduct === product.name ? 'border-[#bfff01]' : 'border-gray-700'} p-2 sm:p-4 hover:bg-gray-700/50 transition-all cursor-pointer`}
+                                                onClick={() => handleProductChange(product.name, group.id)}
                                             >
                                                 <RadioGroupItem 
                                                     value={product.name} 
                                                     id={product.id.toString()} 
-                                                    className="text-[#bfff01] bg-white"
+                                                    className="text-[#bfff01] bg-white h-4 w-4 sm:h-5 sm:w-5"
                                                 />
                                                 <div className="flex-1 flex justify-between items-center">
-                                                    <span className="text-lg text-white">{product.name}</span>
-                                                    <span className="text-[#bfff01] font-semibold">{product.price} руб.</span>
+                                                    <span className="text-sm sm:text-lg text-white">{product.name}</span>
+                                                    <span className="text-[#bfff01] font-semibold text-sm sm:text-lg whitespace-nowrap ml-2">{product.price} руб.</span>
                                                 </div>
                                             </div>
                                         ))}
@@ -135,7 +136,7 @@ export default function Subscribe() {
                         <Button 
                             onClick={handleSubmit}
                             disabled={loading || !selectedProduct} 
-                            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-6 text-lg"
+                            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 sm:py-6 text-sm sm:text-lg font-medium"
                         >
                             {loading ? "Загрузка..." : "Оплатить"}
                         </Button>
