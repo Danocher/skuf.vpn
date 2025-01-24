@@ -85,74 +85,87 @@ export default function Profile() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-10">
-        <Skeleton className="h-[200px] w-full mb-4" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Skeleton className="h-[150px] w-full" />
-          <Skeleton className="h-[150px] w-full" />
-          <Skeleton className="h-[150px] w-full" />
+      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-950">
+        <ProfileSidebar />
+        <div className="flex-1 p-4 lg:p-8">
+          <div className="container mx-auto">
+            <Skeleton className="h-[200px] w-full mb-4" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Skeleton className="h-[150px] w-full" />
+              <Skeleton className="h-[150px] w-full" />
+              <Skeleton className="h-[150px] w-full" />
+            </div>
+          </div>
         </div>
       </div>
     )
   }
 
   if (!userInfo) {
-    return <div className="container mx-auto p-8">Ошибка загрузки данных</div>
+    return (
+      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-950">
+        <ProfileSidebar />
+        <div className="flex-1 p-4 lg:p-8">
+          <div className="container mx-auto">Ошибка загрузки данных</div>
+        </div>
+      </div>
+    )
   }
+
   const domain = process.env.NEXT_PUBLIC_DOMAIN
   return (
-    <div className="flex min-h-screen bg-gray-950">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-950">
       <ProfileSidebar />
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-4 lg:p-8">
         <div className="container max-w-5xl mx-auto">
           {/* Основная информация */}
-          <Card className="mb-12 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 shadow-xl">
-            <CardHeader className="pb-8">
+          <Card className="mb-6 lg:mb-12 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 shadow-xl">
+            <CardHeader className="pb-6 lg:pb-8">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <CardTitle className="text-5xl font-bold mb-3 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+                  <CardTitle className="text-3xl lg:text-5xl font-bold mb-2 lg:mb-3 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
                     Личный кабинет
                   </CardTitle>
-                  <CardDescription className="text-2xl text-gray-200">
+                  <CardDescription className="text-xl lg:text-2xl text-gray-200">
                     Добро пожаловать, {userInfo.user.first_name}
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
                   {userInfo.user.verified ? (
-                    <Badge className="py-2 px-4 text-base bg-green-600/20 text-green-400 hover:bg-green-600/30">
-                      <CheckCircle2 className="w-5 h-5 mr-2" /> Верифицирован
+                    <Badge className="py-1.5 lg:py-2 px-3 lg:px-4 text-sm lg:text-base bg-green-600/20 text-green-400 hover:bg-green-600/30">
+                      <CheckCircle2 className="w-4 h-4 lg:w-5 lg:h-5 mr-2" /> Верифицирован
                     </Badge>
                   ) : (
-                    <Badge variant="destructive" className="py-2 px-4 text-base">
-                      <AlertCircle className="w-5 h-5 mr-2" /> Не верифицирован
+                    <Badge variant="destructive" className="py-1.5 lg:py-2 px-3 lg:px-4 text-sm lg:text-base">
+                      <AlertCircle className="w-4 h-4 lg:w-5 lg:h-5 mr-2" /> Не верифицирован
                     </Badge>
                   )}
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-8 md:grid-cols-2">
+              <div className="grid gap-4 lg:gap-8 md:grid-cols-2">
                 {/* Профиль */}
                 <Card className="bg-gray-800/50 border-gray-700 backdrop-blur-sm hover:bg-gray-800/70 transition-all duration-300">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-3 text-2xl text-gray-100">
-                      <UserCircle className="w-7 h-7 text-blue-400" />
+                    <CardTitle className="flex items-center gap-3 text-xl lg:text-2xl text-gray-100">
+                      <UserCircle className="w-6 h-6 lg:w-7 lg:h-7 text-blue-400" />
                       Профиль
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div>
-                        <p className="text-gray-300 text-base mb-1">Email</p>
-                        <p className="text-xl font-medium text-gray-100">{userInfo.user.email}</p>
+                        <p className="text-gray-300 text-sm lg:text-base mb-1">Email</p>
+                        <p className="text-lg lg:text-xl font-medium text-gray-100">{userInfo.user.email}</p>
                       </div>
                       <div>
-                        <p className="text-gray-300 text-base mb-1">Логин</p>
-                        <p className="text-xl font-medium text-gray-100">{userInfo.user.username}</p>
+                        <p className="text-gray-300 text-sm lg:text-base mb-1">Логин</p>
+                        <p className="text-lg lg:text-xl font-medium text-gray-100">{userInfo.user.username}</p>
                       </div>
                       <div>
-                        <p className="text-gray-300 text-base mb-1">Дата регистрации</p>
-                        <p className="text-xl font-medium text-gray-100">
+                        <p className="text-gray-300 text-sm lg:text-base mb-1">Дата регистрации</p>
+                        <p className="text-lg lg:text-xl font-medium text-gray-100">
                           {new Date(userInfo.user.created_at).toLocaleDateString()}
                         </p>
                       </div>
@@ -163,16 +176,16 @@ export default function Profile() {
                 {/* Баланс */}
                 <Card className="bg-gray-800/50 border-gray-700 backdrop-blur-sm hover:bg-gray-800/70 transition-all duration-300">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-3 text-2xl text-gray-100">
-                      <Wallet className="w-7 h-7 text-green-400" />
+                    <CardTitle className="flex items-center gap-3 text-xl lg:text-2xl text-gray-100">
+                      <Wallet className="w-6 h-6 lg:w-7 lg:h-7 text-green-400" />
                       Баланс
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div>
-                        <p className="text-gray-300 text-base mb-1">Баланс</p>
-                        <p className="text-4xl font-bold bg-gradient-to-r from-green-400 to-blue-400 text-transparent bg-clip-text">
+                        <p className="text-gray-300 text-sm lg:text-base mb-1">Баланс</p>
+                        <p className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-green-400 to-blue-400 text-transparent bg-clip-text">
                           {userInfo.user.balance} ₽
                         </p>
                       </div>
@@ -183,30 +196,31 @@ export default function Profile() {
                 {/* Реферальная программа */}
                 <Card className="bg-gray-800/50 border-gray-700 backdrop-blur-sm hover:bg-gray-800/70 transition-all duration-300">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-3 text-2xl text-gray-100">
-                      <Gift className="w-7 h-7 text-purple-400" />
+                    <CardTitle className="flex items-center gap-3 text-xl lg:text-2xl text-gray-100">
+                      <Gift className="w-6 h-6 lg:w-7 lg:h-7 text-purple-400" />
                       Реферальная программа
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-6">
                       <div>
-                        <p className="text-gray-300 text-base mb-2">Приглашено пользователей</p>
-                        <p className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text">
+                        <p className="text-gray-300 text-sm lg:text-base mb-2">Приглашено пользователей</p>
+                        <p className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text">
                           {userInfo.user.count_invited_users}
                         </p>
                       </div>
                       {userInfo.invite_links?.map((link) => (
                         <div key={link.id} className="space-y-2">
-                          <p className="text-gray-300 text-base mb-1">Ваша реферальная ссылка</p>
+                          <p className="text-gray-300 text-sm lg:text-base mb-1">Ваша реферальная ссылка</p>
                           <div className="flex items-center gap-2">
-                            <code className="flex-1 p-2 rounded bg-black/20 text-white">
+                            <code className="flex-1 p-2 rounded bg-black/20 text-sm lg:text-base text-white break-all">
                               {`${domain}/?referral_code=${link.code}`}
                             </code>
                             <Button
                               variant="outline"
                               size="icon"
                               onClick={() => copyToClipboard(`${domain}/?referral_code=${link.code}`)}
+                              className="shrink-0"
                             >
                               <Copy className="w-4 h-4" />
                             </Button>
@@ -222,21 +236,21 @@ export default function Profile() {
 
           {/* Предупреждения */}
           {userInfo.flags.need_account_update && (
-            <Card className="mb-6 bg-yellow-500/10 border-yellow-500/20 backdrop-blur-sm">
-              <CardContent className="flex items-center gap-3 py-6">
-                <AlertCircle className="w-6 h-6 text-yellow-500" />
-                <p className="text-yellow-500 text-lg">Требуется обновление данных аккаунта</p>
+            <Card className="mb-4 lg:mb-6 bg-yellow-500/10 border-yellow-500/20 backdrop-blur-sm">
+              <CardContent className="flex items-center gap-3 py-4 lg:py-6">
+                <AlertCircle className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-500" />
+                <p className="text-yellow-500 text-base lg:text-lg">Требуется обновление данных аккаунта</p>
               </CardContent>
             </Card>
           )}
 
           {userInfo.flags.ban && (
-            <Card className="mb-6 bg-red-500/10 border-red-500/20 backdrop-blur-sm">
-              <CardContent className="flex items-center gap-3 py-6">
-                <AlertCircle className="w-6 h-6 text-red-500" />
+            <Card className="mb-4 lg:mb-6 bg-red-500/10 border-red-500/20 backdrop-blur-sm">
+              <CardContent className="flex items-center gap-3 py-4 lg:py-6">
+                <AlertCircle className="w-5 h-5 lg:w-6 lg:h-6 text-red-500" />
                 <div>
-                  <p className="text-red-500 font-semibold text-lg mb-1">Аккаунт заблокирован</p>
-                  <p className="text-red-400">{userInfo.flags.ban.message}</p>
+                  <p className="text-red-500 font-semibold text-base lg:text-lg mb-1">Аккаунт заблокирован</p>
+                  <p className="text-red-400 text-sm lg:text-base">{userInfo.flags.ban.message}</p>
                 </div>
               </CardContent>
             </Card>

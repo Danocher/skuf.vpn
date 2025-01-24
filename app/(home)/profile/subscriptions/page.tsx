@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import ButtonCancel from './_components/button.cancel'
 import ButtonResume from './_components/button.resume'
+import { ProfileSidebar } from "@/app/(home)/profile/_components/profile-sidebar"
 
 interface Product {
     available: boolean
@@ -133,13 +134,18 @@ export default function Subscriptions() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-8">
-        <div className="space-y-4">
-          <Skeleton className="h-12 w-[250px]" />
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-[300px] w-full" />
-            ))}
+      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-950">
+        <ProfileSidebar />
+        <div className="flex-1 p-4 lg:p-8">
+          <div className="container max-w-5xl mx-auto">
+            <div className="space-y-4">
+              <Skeleton className="h-12 w-[250px]" />
+              <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} className="h-[300px] w-full" />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -147,88 +153,101 @@ export default function Subscriptions() {
   }
 
   return (
-    <div className="container mx-auto p-8">
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" onClick={() => window.history.back()}>
-          <Undo2 size={18} className="text-purple-400 mr-1" />
-          Назад
-        </div>
-        <div>
-          <Button 
-            onClick={() => window.location.href = '/profile/subscriptions/subscribe'}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center gap-2"
-          >
-            <Plus size={18} />
-            Оформить подписку
-          </Button>
-        </div>
-      </div>
-
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
-          Мои подписки
-        </h1>
-        <p className="text-xl text-gray-300">Управление подписками и автопродлением</p>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {subscriptions.map((subscription) => (
-          <Card key={subscription.id} className="bg-gray-800/50 border-gray-700 backdrop-blur-sm hover:bg-gray-800/70 transition-all duration-300">
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-2xl text-gray-100">{subscription.group_product.name}</CardTitle>
-                {getStatusBadge(subscription)}
-              </div>
-              <CardDescription className="text-gray-300">
-                {subscription.group_product.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-gray-200">
-                  <Clock className="w-5 h-5 text-blue-400" />
-                  <div>
-                    <p className="text-sm text-gray-400">Действует до</p>
-                    <p className="font-medium">
-                      {new Date(subscription.expires_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-
-                {subscription.group_product.benefits.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-400">Преимущества:</p>
-                    <ul className="list-disc list-inside space-y-1 text-gray-200">
-                      {subscription.group_product.benefits.map((benefit, index) => (
-                        <li key={index}>{benefit}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {subscription.status === 3 ? (
-                    <ButtonResume subscription_id={subscription.id} />) :
-                     (<ButtonCancel  subscription_id={subscription.id} />)}
-
-                {subscription.auto_renew_status === 1 && (
-                  <Button variant="outline" className="w-full gap-2">
-                    <RefreshCcw className="w-4 h-4" /> Автопродление включено
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-
-        {subscriptions.length === 0 && (
-          <Card className="col-span-full bg-gray-800/50 border-gray-700">
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <p className="text-xl text-gray-300 mb-4">У вас пока нет активных подписок</p>
-              <Button className="bg-gradient-to-r from-blue-400 to-purple-500" onClick={() => {window.location.href = '/profile/subscriptions/subscribe'}}>
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-950 ">
+      <ProfileSidebar />
+      <div className="flex-1 p-4 lg:p-8">
+        <div className="container max-w-5xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 lg:mb-8 gap-4 sm:gap-0">
+            <div className="flex items-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600" onClick={() => window.history.back()}>
+              <Undo2 size={18} className="text-purple-400 mr-1" />
+              Назад
+            </div>
+            <div>
+              <Button 
+                onClick={() => window.location.href = '/profile/subscriptions/subscribe'}
+                className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <Plus size={18} />
                 Оформить подписку
               </Button>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+          </div>
+
+          <div className="mb-6 lg:mb-8">
+            <h1 className="text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+              Мои подписки
+            </h1>
+            <p className="text-lg lg:text-xl text-gray-300">Управление подписками и автопродлением</p>
+          </div>
+
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {subscriptions.map((subscription) => (
+              <Card key={subscription.id} className="bg-gray-800/50 border-gray-700 backdrop-blur-sm hover:bg-gray-800/70 transition-all duration-300">
+                <CardHeader>
+                  <div className="flex justify-between items-start gap-2">
+                    <CardTitle className="text-xl lg:text-2xl text-gray-100">{subscription.group_product.name}</CardTitle>
+                    {getStatusBadge(subscription)}
+                  </div>
+                  <CardDescription className="text-sm lg:text-base text-gray-300">
+                    {subscription.group_product.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 text-gray-200">
+                      <Clock className="w-5 h-5 text-blue-400 shrink-0" />
+                      <div>
+                        <p className="text-sm text-gray-400">Действует до</p>
+                        <p className="text-base lg:text-lg font-medium">
+                          {new Date(subscription.expires_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+
+                    {subscription.group_product.benefits.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-sm text-gray-400">Преимущества:</p>
+                        <ul className="list-disc list-inside space-y-1 text-sm lg:text-base text-gray-200">
+                          {subscription.group_product.benefits.map((benefit, index) => (
+                            <li key={index} className="break-words">{benefit}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    <div className="pt-2">
+                      {subscription.status === 3 ? (
+                        <ButtonResume subscription_id={subscription.id} />
+                      ) : (
+                        <ButtonCancel subscription_id={subscription.id} />
+                      )}
+                    </div>
+
+                    {subscription.auto_renew_status === 1 && (
+                      <Button variant="outline" className="w-full gap-2 text-sm lg:text-base">
+                        <RefreshCcw className="w-4 h-4 shrink-0" /> Автопродление включено
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+
+            {subscriptions.length === 0 && (
+              <Card className="col-span-full bg-gray-800/50 border-gray-700">
+                <CardContent className="flex flex-col items-center justify-center py-8 lg:py-12">
+                  <p className="text-lg lg:text-xl text-gray-300 mb-4">У вас пока нет активных подписок</p>
+                  <Button 
+                    className="bg-gradient-to-r from-blue-400 to-purple-500 text-base lg:text-lg" 
+                    onClick={() => {window.location.href = '/profile/subscriptions/subscribe'}}
+                  >
+                    Оформить подписку
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )
